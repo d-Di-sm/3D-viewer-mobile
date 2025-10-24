@@ -1,6 +1,9 @@
 import './Overlay.css'
+import { useState } from 'react'
 
-const Overlay = () => {
+const Overlay = ({ isMobile }) => {
+
+    const [menuOpen, setMenuOpen] = useState(false)
 
     return(
         <>
@@ -12,75 +15,74 @@ const Overlay = () => {
         </div>
         
 
-        
-        {/* Navigation Words */}
-        <div
-            style={{
-            position: 'absolute',
-            top: '40px',
-            right: '20px',
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '120px',
-            zIndex: 10,
-            transform: 'translateX(-50px)'
-        }}
-        >
-        
-            <a 
-            href="https://sordomadaleno.com/projects" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            style={{
-                fontSize: '25px',
-                color: 'white',
-                fontWeight: '500',
-                textDecoration: 'none',
-                cursor:'pointer',
-                transition: 'opacity 0.3s'
-            }} 
-            onMouseOver={(e) => e.target.style.opacity = '0.7'} 
-            onMouseOut={(e) => e.target.style.opacity = '1'}
-            >PROJECTS</a>
+        {/* Desktop Navigation */}
+        {!isMobile && (
+            <div className="desktop-nav">
+                <a 
+                href="https://sordomadaleno.com/projects" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="nav-link"
+                >PROJECTS</a>
 
-            <a 
-            href="http://sordomadaleno.com/studio" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            style={{
-                fontSize: '25px',
-                color: 'white',
-                fontWeight: '500',
-                textDecoration: 'none',
-                cursor:'pointer',
-                transition: 'opacity 0.3s'
-            }} 
-            onMouseOver={(e) => e.target.style.opacity = '0.7'} 
-            onMouseOut={(e) => e.target.style.opacity = '1'}
-            >STUDIO</a>
+                <a 
+                href="http://sordomadaleno.com/studio" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="nav-link"
+                >STUDIO</a>
 
-            <span 
-            style={{
-                fontSize: '25px',
-                color:'white',
-                fontWeight: '500',
-                cursor:'pointer'
-            }}
-            onMouseOver={(e) => e.target.style.opacity = '0.7'} 
-            onMouseOut={(e) => e.target.style.opacity = '1'}
-            >TEAM</span>
+                <span className="nav-link">TEAM</span>
 
-            <span 
-            style={{
-                fontSize: '25px',
-                color:'white',
-                fontWeight: '500',
-                cursor: 'pointer'               
-            }}
-            onMouseOver={(e) => e.target.style.opacity = '0.7'} 
-            onMouseOut={(e) => e.target.style.opacity = '1'}
-            >HOME</span>
-        </div>
+                <span className="nav-link">HOME</span>
+            </div>
+        )}
+
+        {/* Mobile Menu Button */}
+        {isMobile && (
+            <button 
+                className="mobile-menu-button"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        )}
+
+        {/* Mobile Menu Overlay */}
+        {isMobile && menuOpen && (
+            <div className="mobile-menu-overlay">
+                <button 
+                    className="mobile-menu-close"
+                    onClick={() => setMenuOpen(false)}
+                >
+                    ×
+                </button>
+                
+                <nav className="mobile-menu-nav">
+                    <a 
+                        href="https://sordomadaleno.com/projects" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        PROJECTS
+                    </a>
+                    <a 
+                        href="http://sordomadaleno.com/studio" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        onClick={() => setMenuOpen(false)}
+                    >
+                        STUDIO
+                    </a>
+                    <span onClick={() => setMenuOpen(false)}>TEAM</span>
+                    <span onClick={() => setMenuOpen(false)}>HOME</span>
+                </nav>
+            </div>
+        )}
 
         
         </>

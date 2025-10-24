@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber'
-import { useHelper, Html, OrbitControls, Stage, Center, PivotControls } from '@react-three/drei'
+import { useHelper, Html, OrbitControls, Stage, Center, PivotControls, useGLTF } from '@react-three/drei'
 import { useRef, useState } from 'react'
 import { useControls } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -8,15 +8,15 @@ import * as THREE from 'three'
 
 import CameraControls from "./CameraControls.jsx"
 import Background from "./Background.jsx"
-import LondonHouse from './Building/LondonHouse.jsx'
-import N1 from './Building/N1.jsx'
-import N2 from './Building/N2.jsx'
-import N3 from './Building/N3.jsx'
-import N4 from './Building/N4.jsx'
-import N5 from './Building/N5.jsx'
+import N1 from './Building/N1_F.jsx'
+import N2 from './Building/N2_F.jsx'
+import N3 from './Building/N3_F.jsx'
+import N4 from './Building/N4_F.jsx'
+import N5 from './Building/N5_F.jsx'
+import PB from './Building/PB_F.jsx'
 
 
-const Experience = () => {
+const Experience = ({ isMobile }) => {
 
     const directionalLight = useRef()
     useHelper(directionalLight, THREE.DirectionalLightHelper, 1 )
@@ -24,6 +24,7 @@ const Experience = () => {
     const sphere = useRef()
     const groupRef = useRef()
 
+    const { nodes } = useGLTF('./models/Prueba10.glb')
 
     /**
      * Animations
@@ -71,10 +72,18 @@ const Experience = () => {
     return (
         <>
 
-        { perfVisible ? <Perf position="top-left"/> : null }
+        { perfVisible && !isMobile ? <Perf position="top-left"/> : null }
 
         {/* <CameraControls /> */}
-        <OrbitControls makeDefault />
+        <OrbitControls 
+            makeDefault 
+            enableDamping={ true }
+            dampingFactor={ 0.05 }
+            minDistance={ isMobile ? 20 : 10 }
+            maxDistance={ isMobile ? 80 : 100 }
+            maxPolarAngle={ Math.PI / 2.2 }
+            touchAction="pan-y"
+        />
 
         <Background />
 
@@ -138,13 +147,14 @@ const Experience = () => {
         <Center>
 
 
-        <LondonHouse />
+        <PB />
 
+        {/* PivotControls con escala adaptativa para móviles */}
         <PivotControls
             anchor={[ 1, 0, 0 ]}
             depthTest={ false }
-            lineWidth={ 4 }
-            scale={ 100 }
+            lineWidth={ isMobile ? 2 : 4 }
+            scale={ isMobile ? 50 : 100 }
             fixed={ true }
         >
         <N1 />
@@ -154,8 +164,8 @@ const Experience = () => {
         <PivotControls
             anchor={[ 1, 0, 0 ]}
             depthTest={ false }
-            lineWidth={ 4 }
-            scale={ 100 }
+            lineWidth={ isMobile ? 2 : 4 }
+            scale={ isMobile ? 50 : 100 }
             fixed={ true }
         >
             <N2 />
@@ -165,8 +175,8 @@ const Experience = () => {
         <PivotControls
             anchor={[ 1, 0, 0 ]}
             depthTest={ false }
-            lineWidth={ 4 }
-            scale={ 100 }
+            lineWidth={ isMobile ? 2 : 4 }
+            scale={ isMobile ? 50 : 100 }
             fixed={ true }
         >
         <N3 />
@@ -176,8 +186,8 @@ const Experience = () => {
         <PivotControls
             anchor={[ 1, 0, 0 ]}
             depthTest={ false }
-            lineWidth={ 4 }
-            scale={ 100 }
+            lineWidth={ isMobile ? 2 : 4 }
+            scale={ isMobile ? 50 : 100 }
             fixed={ true }
         >
             <N4 />
@@ -187,18 +197,40 @@ const Experience = () => {
         <PivotControls
             anchor={[ 1, 0, 0 ]}
             depthTest={ false }
-            lineWidth={ 4 }
-            scale={ 100 }
+            lineWidth={ isMobile ? 2 : 4 }
+            scale={ isMobile ? 50 : 100 }
             fixed={ true }
         >
             <N5 />
         </PivotControls>
 
 
+        {/* <PB /> */}
 
-        <mesh receiveShadow position={[ -10, .1, 10 ]} rotation-x={ - Math.PI * 0.5 } scale={ 40 }>
+        <mesh castShadow receiveShadow position={[ -10, 1, 0 ]}  scale={ 2 } >
+            <boxGeometry  />
+            <meshStandardMaterial color="#ffffff" side={THREE.DoubleSide} />
+        </mesh>
+
+        <mesh castShadow position={[ -10, 3, 2 ]}  scale={ 2 } >
+            <boxGeometry  />
+            <meshStandardMaterial color="#ffffff" side={THREE.DoubleSide} />
+        </mesh>
+
+        
+
+        {/* <mesh castShadow receiveShadow geometry={ nodes.Cube1.geometry} position={ nodes.Cube1.position } position-y={ 3 } >
+            <meshStandardMaterial { ...nodes.Cube1.material } color="#ffffff" side={THREE.DoubleSide}/>
+        </mesh>
+
+        <mesh castShadow receiveShadow geometry={ nodes.Cube2.geometry} position={ nodes.Cube2.position }>
+            <meshStandardMaterial { ...nodes.Cube2.material } color="#ff0000" side={THREE.DoubleSide}/>
+        </mesh> */}
+
+
+        <mesh receiveShadow position={[ -7.5, 0, 15 ]} rotation-x={ - Math.PI * 0.5 } scale={ 50 }>
             <planeGeometry />
-            <meshStandardMaterial color="ivory" />
+            <meshStandardMaterial color="#ffffe5" />
         </mesh>
 
 

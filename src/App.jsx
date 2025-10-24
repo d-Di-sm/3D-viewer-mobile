@@ -2,7 +2,7 @@ import { OrbitControls } from '@react-three/drei'
 import './App.css'
 import { Canvas } from '@react-three/fiber'
 import { Leva } from 'leva'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import * as THREE from 'three'
 import Experience from './components/Experience'
 import Overlay from './components/Overlay'
@@ -20,10 +20,39 @@ function LogCameraAndTarget () {
 
 function App() {
 
+  // Detectar si es móvil
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  // Configuración de cámara adaptativa
+  const cameraConfig = isMobile 
+    ? {
+        fov: 60,
+        near: 0.1,
+        far: 200,
+        position: [ 25, 15, -40 ] 
+      }
+    : {
+        fov: 45,
+        near: 0.1,
+        far: 200,
+        position: [ 15, 10, -30 ] 
+      }
+
   return (
     <>
 
-      <Leva collapsed />
+      <Leva collapsed hidden={ isMobile } />
       <Canvas
           dpr={ [ 1, 2 ] }
           gl={ {
@@ -31,12 +60,7 @@ function App() {
               toneMapping: THREE.ACESFilmicToneMapping,
               outputColorSpace: THREE.SRGBColorSpace
           }}
-          camera={ {
-              fov: 45,
-              near: 0.1,
-              far: 200,
-              position: [ 20, 5, -35 ] 
-          } }
+          camera={ cameraConfig }
           shadows={{
             enabled: true,
             type: "VSMShadowMap"
@@ -45,11 +69,11 @@ function App() {
 
           {/* <LogCameraAndTarget /> */}
 
-          <Experience />
+          <Experience isMobile={ isMobile } />
 
       </Canvas>
 
-      <Overlay />
+      <Overlay isMobile={ isMobile } />
 
 
     </>

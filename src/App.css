@@ -12,6 +12,20 @@ body,
     overflow: hidden;
     background: #00000088;
     font-family: 'Inter var', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: none;
+}
+
+/* Mejoras para dispositivos táctiles */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+canvas {
+    display: block;
+    touch-action: none;
 }
 
 
